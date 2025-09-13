@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Student Wellness Monitor - Mood Check-in</title>
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+  .container {
+    background: #fff;
+    max-width: 400px;
+    width: 100%;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  h1 {
+    margin-top: 0;
+    color: #333;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+  p.subtitle {
+    color: #666;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .mood-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .mood-btn {
+    background: #e0e7ff;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .mood-btn:hover {
+    background-color: #c7d2fe;
+    transform: scale(1.15);
+  }
+  .mood-btn.selected {
+    background-color: #6366f1;
+    color: white;
+    transform: scale(1.25);
+  }
+  textarea {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: 20px;
+    font-family: inherit;
+  }
+  button.submit-btn {
+    width: 100%;
+    background-color: #6366f1;
+    border: none;
+    padding: 14px;
+    font-size: 1.1rem;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button.submit-btn:hover {
+    background-color: #4f46e5;
+  }
+  .feedback {
+    margin-top: 15px;
+    font-weight: 600;
+    color: #22c55e;
+    text-align: center;
+  }
+  @media (max-width: 440px) {
+    .container {
+      padding: 20px 15px;
+    }
+    .mood-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 1.6rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" role="main" aria-label="Student Wellness Monitor Mood Check-in">
+  <h1>How are you feeling today?</h1>
+  <p class="subtitle">Select your mood and optionally write about your day.</p>
+
+  <div class="mood-options" role="radiogroup" aria-label="Mood selection">
+    <button class="mood-btn" aria-checked="false" role="radio" aria-label="Very Happy" data-mood="very_happy">😄</button>
+    <button class="mood-btn" aria-checked="false" role="radio" aria-label="Happy" data-mood="happy">🙂</button>
+    <button class="mood-btn" aria-checked="false" role="radio" aria-label="Neutral" data-mood="neutral">😐</button>
+    <button class="mood-btn" aria-checked="false" role="radio" aria-label="Sad" data-mood="sad">😔</button>
+    <button class="mood-btn" aria-checked="false" role="radio" aria-label="Very Sad" data-mood="very_sad">😢</button>
+  </div>
+
+  <textarea id="journal" placeholder="Write about your day (optional)" aria-label="Journal entry"></textarea>
+
+  <button class="submit-btn" id="submitBtn" aria-live="polite">Submit</button>
+
+  <p class="feedback" id="feedback" role="alert" aria-live="assertive"></p>
+</div>
+
+<script>
+  const moodButtons = document.querySelectorAll('.mood-btn');
+  let selectedMood = null;
+
+  moodButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Clear previous selection
+      moodButtons.forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-checked', 'false');
+      });
+      // Set new selection
+      btn.classList.add('selected');
+      btn.setAttribute('aria-checked', 'true');
+      selectedMood = btn.dataset.mood;
+    });
+  });
+
+  const submitBtn = document.getElementById('submitBtn');
+  const feedback = document.getElementById('feedback');
+  const journalInput = document.getElementById('journal');
+
+  submitBtn.addEventListener('click', () => {
+    if (!selectedMood) {
+      feedback.textContent = 'Please select a mood before submitting.';
+      feedback.style.color = '#dc2626'; // red for error
+      return;
+    }
+
+    // Collect data
+    const journalText = journalInput.value.trim();
+
+    // Simulate form submission / API call here
+    console.log('Submitted Mood:', selectedMood);
+    console.log('Journal Entry:', journalText);
+
+    // Provide user feedback
+    feedback.style.color = '#22c55e'; // green success
+    feedback.textContent = 'Thanks for checking in! Your mood has been recorded.';
+
+    // Clear form (optional)
+    selectedMood = null;
+    moodButtons.forEach(b => {
+      b.classList.remove('selected');
+      b.setAttribute('aria-checked', 'false');
+    });
+    journalInput.value = '';
+  });
+</script>
+
+</body>
+</html>
